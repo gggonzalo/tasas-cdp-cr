@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
-import { DarkModeToggle } from "@/components/dark-mode-toggle";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,9 +10,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Tasas de CDPs en Costa Rica",
+  title: "Tasas CDP Costa Rica",
   description:
-    "Comparación de tasas de certificados a plazo en entidades financieras de Costa Rica",
+    "Tasas de certificados a plazo en entidades financieras de Costa Rica",
 };
 
 export default function RootLayout({
