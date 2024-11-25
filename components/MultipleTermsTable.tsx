@@ -41,13 +41,12 @@ type AmountOption = {
   label: string;
 };
 
-// TODO: Definir estos valores yo segun lo que vea mas comun de saltos en los bancos
 const amountOptions: AmountOption[] = [
   { amount: 250000, currency: "CRC", label: "₡250,000" },
   { amount: 1000000, currency: "CRC", label: "₡1,000,000" },
   { amount: 5000000, currency: "CRC", label: "₡5,000,000" },
   { amount: 10000000, currency: "CRC", label: "₡10,000,000" },
-  { amount: 1000, currency: "USD", label: "$1,000" },
+  { amount: 1500, currency: "USD", label: "$1,500" },
   { amount: 5000, currency: "USD", label: "$5,000" },
   { amount: 10000, currency: "USD", label: "$10,000" },
   { amount: 50000, currency: "USD", label: "$50,000" },
@@ -60,10 +59,11 @@ type TableRowRates = {
 
 type TableRow = {
   entity: string;
-  term180: TableRowRates | null;
-  term360: TableRowRates | null;
-  term720: TableRowRates | null;
-  term1080: TableRowRates | null;
+  term1: TableRowRates | null;
+  term3: TableRowRates | null;
+  term6: TableRowRates | null;
+  term12: TableRowRates | null;
+  term24: TableRowRates | null;
 };
 
 const sortRowsByNetRate = (
@@ -102,90 +102,54 @@ const generateTermColSortableHeader = (
   );
 };
 
+const generateTermCell = (termRatesRow: TableRowRates | null) => {
+  if (!termRatesRow)
+    return (
+      <span className="text-xs text-muted-foreground">Sin información</span>
+    );
+
+  return (
+    <span className="text-xs">
+      {`${termRatesRow.gross.toFixed(2)}%`} /{" "}
+      <span className="font-semibold">{`${termRatesRow.net.toFixed(2)}%`}</span>
+    </span>
+  );
+};
+
 const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "entity",
     header: "Entidad",
   },
   {
-    accessorKey: "term180",
+    accessorKey: "term1",
+    header: ({ column }) => generateTermColSortableHeader(column, "1 mes"),
+    cell: ({ row }) => generateTermCell(row.getValue("term1")),
+    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term1"),
+  },
+  {
+    accessorKey: "term3",
+    header: ({ column }) => generateTermColSortableHeader(column, "3 meses"),
+    cell: ({ row }) => generateTermCell(row.getValue("term3")),
+    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term3"),
+  },
+  {
+    accessorKey: "term6",
     header: ({ column }) => generateTermColSortableHeader(column, "6 meses"),
-    cell: ({ row }) => {
-      const rates = row.getValue("term180") as TableRowRates;
-
-      if (!rates)
-        return (
-          <span className="text-xs text-muted-foreground">Sin información</span>
-        );
-
-      return (
-        <span className="text-xs">
-          {`${rates.gross.toFixed(2)}%`} /{" "}
-          <span className="font-semibold">{`${rates.net.toFixed(2)}%`}</span>
-        </span>
-      );
-    },
-    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term180"),
+    cell: ({ row }) => generateTermCell(row.getValue("term6")),
+    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term6"),
   },
   {
-    accessorKey: "term360",
+    accessorKey: "term12",
     header: ({ column }) => generateTermColSortableHeader(column, "12 meses"),
-    cell: ({ row }) => {
-      const rates = row.getValue("term360") as TableRowRates;
-
-      if (!rates)
-        return (
-          <span className="text-xs text-muted-foreground">Sin información</span>
-        );
-
-      return (
-        <span className="text-xs">
-          {`${rates.gross.toFixed(2)}%`} /{" "}
-          <span className="font-semibold">{`${rates.net.toFixed(2)}%`}</span>
-        </span>
-      );
-    },
-    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term360"),
+    cell: ({ row }) => generateTermCell(row.getValue("term12")),
+    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term12"),
   },
   {
-    accessorKey: "term720",
+    accessorKey: "term24",
     header: ({ column }) => generateTermColSortableHeader(column, "24 meses"),
-    cell: ({ row }) => {
-      const rates = row.getValue("term720") as TableRowRates;
-
-      if (!rates)
-        return (
-          <span className="text-xs text-muted-foreground">Sin información</span>
-        );
-
-      return (
-        <span className="text-xs">
-          {`${rates.gross.toFixed(2)}%`} /{" "}
-          <span className="font-semibold">{`${rates.net.toFixed(2)}%`}</span>
-        </span>
-      );
-    },
-    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term720"),
-  },
-  {
-    accessorKey: "term1080",
-    header: ({ column }) => generateTermColSortableHeader(column, "36 meses"),
-    cell: ({ row }) => {
-      const rates = row.getValue("term1080") as TableRowRates;
-
-      if (!rates)
-        return (
-          <span className="text-xs text-muted-foreground">Sin información</span>
-        );
-
-      return (
-        <span className="text-xs">
-          {`${rates.gross.toFixed(2)}%`} /{" "}
-          <span className="font-semibold">{`${rates.net.toFixed(2)}%`}</span>
-        </span>
-      );
-    },
-    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term1080"),
+    cell: ({ row }) => generateTermCell(row.getValue("term24")),
+    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term24"),
   },
 ];
 
@@ -202,30 +166,29 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
   const filteredRows: TableRow[] = useMemo(
     () =>
       entitiesRates.map((entityRates) => {
-        const getAmountRatesForTerm = (term: number) => {
+        const getAmountRateForTerm = (term: number) => {
           const termRates = entityRates.ratesByTerm[term];
-          return termRates.find((tr) => tr.amount === selectedAmount.amount);
+
+          return termRates.find(
+            (tr) =>
+              tr.min <= selectedAmount.amount &&
+              selectedAmount.amount <= tr.max,
+          );
         };
 
-        const rates180 = getAmountRatesForTerm(180);
-        const rates360 = getAmountRatesForTerm(360);
-        const rates720 = getAmountRatesForTerm(720);
-        const rates1080 = getAmountRatesForTerm(1080);
+        const rate1 = getAmountRateForTerm(1);
+        const rate3 = getAmountRateForTerm(3);
+        const rate6 = getAmountRateForTerm(6);
+        const rate12 = getAmountRateForTerm(12);
+        const rate24 = getAmountRateForTerm(24);
 
         return {
           entity: entityRates.entity,
-          term180: rates180
-            ? { gross: rates180.grossRate, net: rates180.netRate }
-            : null,
-          term360: rates360
-            ? { gross: rates360.grossRate, net: rates360.netRate }
-            : null,
-          term720: rates720
-            ? { gross: rates720.grossRate, net: rates720.netRate }
-            : null,
-          term1080: rates1080
-            ? { gross: rates1080.grossRate, net: rates1080.netRate }
-            : null,
+          term1: rate1 ? { gross: rate1.gross, net: rate1.net } : null,
+          term3: rate3 ? { gross: rate3.gross, net: rate3.net } : null,
+          term6: rate6 ? { gross: rate6.gross, net: rate6.net } : null,
+          term12: rate12 ? { gross: rate12.gross, net: rate12.net } : null,
+          term24: rate24 ? { gross: rate24.gross, net: rate24.net } : null,
         };
       }),
     [entitiesRates, selectedAmount],
@@ -244,10 +207,12 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-lg font-bold">Tasas por plazo</h2>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Label htmlFor="amount-range">Monto</Label>
+      <div className="mb-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
+        <h2 className="text-lg font-semibold">
+          Tasas por plazo ({selectedAmount.label})
+        </h2>
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+          <Label htmlFor="amount">Monto</Label>
           <Select
             value={selectedAmount.label}
             onValueChange={(value) => {
@@ -256,7 +221,7 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
               if (option) setSelectedAmount(option);
             }}
           >
-            <SelectTrigger id="amount-range" className="w-[200px]">
+            <SelectTrigger id="amount" className="w-[140px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
