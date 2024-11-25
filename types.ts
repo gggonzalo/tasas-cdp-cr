@@ -1,21 +1,19 @@
-export type Currency = "CRC" | "USD";
-
 export type RateByAmount = {
-  currency: Currency;
+  currency: string;
   min: number;
-  max: number;
+  max: number | null;
   gross: number;
   net: number;
 };
 
 export type EntityRates = {
   entity: string;
-  ratesByTerm: Record<number, RateByAmount[]>;
+  ratesByTerm: Record<string, RateByAmount[]>;
 };
 
 export type EntityHistoricalRates = {
   entity: string;
-  currency: Currency;
+  currency: string;
   amount: number;
-  netRatesByDate: Record<string, Record<number, number>>;
+  netRatesByDate: Record<string, Record<string, number>>;
 };

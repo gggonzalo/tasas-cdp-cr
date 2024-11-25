@@ -20,7 +20,7 @@ import {
   Column,
   SortingState,
 } from "@tanstack/react-table";
-import { Currency, EntityRates } from "@/types";
+import { EntityRates } from "@/types";
 import {
   Select,
   SelectContent,
@@ -37,7 +37,7 @@ import { Button } from "@/components/ui/button";
 
 type AmountOption = {
   amount: number;
-  currency: Currency;
+  currency: string;
   label: string;
 };
 
@@ -63,7 +63,6 @@ type TableRow = {
   term3: TableRowRates | null;
   term6: TableRowRates | null;
   term12: TableRowRates | null;
-  term24: TableRowRates | null;
 };
 
 const sortRowsByNetRate = (
@@ -105,11 +104,13 @@ const generateTermColSortableHeader = (
 const generateTermCell = (termRatesRow: TableRowRates | null) => {
   if (!termRatesRow)
     return (
-      <span className="text-xs text-muted-foreground">Sin información</span>
+      <span className="text-nowrap text-xs text-muted-foreground">
+        Sin información
+      </span>
     );
 
   return (
-    <span className="text-xs">
+    <span className="text-nowrap text-xs">
       {`${termRatesRow.gross.toFixed(2)}%`} /{" "}
       <span className="font-semibold">{`${termRatesRow.net.toFixed(2)}%`}</span>
     </span>
@@ -145,12 +146,6 @@ const columns: ColumnDef<TableRow>[] = [
     cell: ({ row }) => generateTermCell(row.getValue("term12")),
     sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term12"),
   },
-  {
-    accessorKey: "term24",
-    header: ({ column }) => generateTermColSortableHeader(column, "24 meses"),
-    cell: ({ row }) => generateTermCell(row.getValue("term24")),
-    sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term24"),
-  },
 ];
 
 interface MultipleTermsTableProps {
@@ -166,21 +161,21 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
   const filteredRows: TableRow[] = useMemo(
     () =>
       entitiesRates.map((entityRates) => {
-        const getAmountRateForTerm = (term: number) => {
+        const getAmountRateForTerm = (term: string) => {
           const termRates = entityRates.ratesByTerm[term];
 
-          return termRates.find(
+          return termRates?.find(
             (tr) =>
+              tr.currency === selectedAmount.currency &&
               tr.min <= selectedAmount.amount &&
-              selectedAmount.amount <= tr.max,
+              (!tr.max || selectedAmount.amount <= tr.max),
           );
         };
 
-        const rate1 = getAmountRateForTerm(1);
-        const rate3 = getAmountRateForTerm(3);
-        const rate6 = getAmountRateForTerm(6);
-        const rate12 = getAmountRateForTerm(12);
-        const rate24 = getAmountRateForTerm(24);
+        const rate1 = getAmountRateForTerm("1");
+        const rate3 = getAmountRateForTerm("3");
+        const rate6 = getAmountRateForTerm("6");
+        const rate12 = getAmountRateForTerm("12");
 
         return {
           entity: entityRates.entity,
@@ -188,7 +183,6 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
           term3: rate3 ? { gross: rate3.gross, net: rate3.net } : null,
           term6: rate6 ? { gross: rate6.gross, net: rate6.net } : null,
           term12: rate12 ? { gross: rate12.gross, net: rate12.net } : null,
-          term24: rate24 ? { gross: rate24.gross, net: rate24.net } : null,
         };
       }),
     [entitiesRates, selectedAmount],
