@@ -1,6 +1,25 @@
 import { HistoricalRatesChart } from "@/components/HistoricalRatesChart";
 import { MultipleTermsTable } from "@/components/MultipleTermsTable";
-import entitiesRates from "../../datos-tasas-cdp-cr/10-25/2024-11-25T07.00.00.000Z.json";
+import janEntitiesRates from "../../datos-tasas-cdp-cr/2024-01/2024-01-01T06.00.00.000Z.json";
+import febEntitiesRates from "../../datos-tasas-cdp-cr/2024-02/2024-02-01T06.00.00.000Z.json";
+import marEntitiesRates from "../../datos-tasas-cdp-cr/2024-03/2024-03-01T06.00.00.000Z.json";
+import aprEntitiesRates from "../../datos-tasas-cdp-cr/2024-04/2024-04-01T06.00.00.000Z.json";
+import mayEntitiesRates from "../../datos-tasas-cdp-cr/2024-05/2024-05-01T06.00.00.000Z.json";
+import junEntitiesRates from "../../datos-tasas-cdp-cr/2024-06/2024-06-01T06.00.00.000Z.json";
+import julEntitiesRates from "../../datos-tasas-cdp-cr/2024-07/2024-07-01T06.00.00.000Z.json";
+import novEntitiesRates from "../../datos-tasas-cdp-cr/2024-11/2024-11-01T06.00.00.000Z.json";
+import entitiesRates from "../../datos-tasas-cdp-cr/2024-11/2024-11-26T03.00.00.000Z.json";
+
+const monthlyRatesMap = {
+  "2024-01-01T06:00Z": janEntitiesRates,
+  "2024-02-01T06:00Z": febEntitiesRates,
+  "2024-03-01T06:00Z": marEntitiesRates,
+  "2024-04-01T06:00Z": aprEntitiesRates,
+  "2024-05-01T06:00Z": mayEntitiesRates,
+  "2024-06-01T06:00Z": junEntitiesRates,
+  "2024-07-01T06:00Z": julEntitiesRates,
+  "2024-11-01T06:00Z": novEntitiesRates,
+};
 
 export default function Home() {
   return (
@@ -19,7 +38,7 @@ export default function Home() {
       <MultipleTermsTable entitiesRates={entitiesRates} />
 
       {/* TODO: Just a single amount per currency will be used to keep historical data. Choose the most common one (pbly the smallest one which meets the min req in all banks) */}
-      <HistoricalRatesChart />
+      <HistoricalRatesChart monthlyRatesMap={monthlyRatesMap} />
     </main>
   );
 }

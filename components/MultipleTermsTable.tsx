@@ -32,8 +32,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 type AmountOption = {
   amount: number;
@@ -148,9 +149,9 @@ const columns: ColumnDef<TableRow>[] = [
   },
 ];
 
-interface MultipleTermsTableProps {
+type MultipleTermsTableProps = {
   entitiesRates: EntityRates[];
-}
+};
 
 export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
   const [selectedAmount, setSelectedAmount] = useState<AmountOption>(
@@ -202,9 +203,27 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
-        <h2 className="text-lg font-semibold">
-          Tasas por plazo ({selectedAmount.label})
-        </h2>
+        <div className="flex items-center gap-1.5">
+          <h2 className="text-lg font-semibold">
+            Tasas por plazo ({selectedAmount.label})
+          </h2>
+          <Tooltip delayDuration={0}>
+            <TooltipTrigger>
+              <Info className="text-muted-foreground" size={16} />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-center">
+                1 mes = 30 días
+                <br />
+                3 meses = 90 días
+                <br />
+                6 meses = 180 días
+                <br />
+                12 meses = 365 días
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
           <Label htmlFor="amount">Monto</Label>
           <Select

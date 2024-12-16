@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { DarkModeToggle } from "@/components/DarkModeToggle";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,10 +30,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="absolute right-2 top-2">
-            <DarkModeToggle />
-          </div>
-          {children}
+          <TooltipProvider>
+            <div className="absolute right-2 top-2">
+              <DarkModeToggle />
+            </div>
+            {children}
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

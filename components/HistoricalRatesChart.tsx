@@ -1,6 +1,6 @@
 "use client";
 
-import { EntityHistoricalRates } from "@/types";
+import { EntityHistoricalRates, EntityRates } from "@/types";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
@@ -26,104 +26,78 @@ const termOptions = [
   { value: 12, label: "12 meses" },
 ];
 
-const historicalRates: EntityHistoricalRates[] = [
-  {
-    entity: "BAC",
-    currency: "CRC",
-    amount: 1000000,
-    netRatesByDate: {
-      "2024-01-01T06:00Z": { "1": 6.38, "3": 6.39, "6": 6.38, "12": 6.42 },
-      "2024-02-01T06:00Z": { "1": 6.45, "3": 6.46, "6": 6.42, "12": 6.5 },
-      "2024-03-01T06:00Z": { "1": 6.52, "3": 6.54, "6": 6.5, "12": 6.58 },
-      "2024-04-01T06:00Z": { "1": 6.6, "3": 6.61, "6": 6.58, "12": 6.65 },
-      "2024-05-01T06:00Z": { "1": 6.55, "3": 6.56, "6": 6.52, "12": 6.6 },
-      "2024-06-01T06:00Z": { "1": 6.5, "3": 6.51, "6": 6.48, "12": 6.55 },
-      "2024-08-01T06:00Z": { "1": 6.42, "3": 6.44, "6": 6.4, "12": 6.48 },
-      "2024-09-01T06:00Z": { "1": 6.4, "3": 6.41, "6": 6.38, "12": 6.45 },
-      "2024-10-01T06:00Z": { "1": 6.38, "3": 6.39, "6": 6.35, "12": 6.42 },
-    },
-  },
-  {
-    entity: "BAC",
-    currency: "USD",
-    amount: 1500,
-    netRatesByDate: {
-      "2024-01-01T06:00Z": { "1": 3.61, "3": 3.7, "6": 3.83, "12": 4.04 },
-      "2024-02-01T06:00Z": { "1": 3.65, "3": 3.75, "6": 3.87, "12": 4.08 },
-      "2024-03-01T06:00Z": { "1": 3.7, "3": 3.8, "6": 3.91, "12": 4.12 },
-      "2024-04-01T06:00Z": { "1": 3.75, "3": 3.85, "6": 3.95, "12": 4.16 },
-      "2024-05-01T06:00Z": { "1": 3.72, "3": 3.82, "6": 3.93, "12": 4.14 },
-      "2024-06-01T06:00Z": { "1": 3.7, "3": 3.8, "6": 3.91, "12": 4.12 },
-      "2024-08-01T06:00Z": { "1": 3.65, "3": 3.75, "6": 3.87, "12": 4.08 },
-      "2024-09-01T06:00Z": { "1": 3.63, "3": 3.73, "6": 3.85, "12": 4.06 },
-      "2024-10-01T06:00Z": { "1": 3.61, "3": 3.71, "6": 3.83, "12": 4.04 },
-    },
-  },
-  {
-    entity: "BCR",
-    currency: "CRC",
-    amount: 1000000,
-    netRatesByDate: {
-      "2024-01-01T06:00Z": { "1": 5.74, 2: 5.8, "6": 5.74, "12": 5.85 },
-      "2024-02-01T06:00Z": { "1": 5.8, 2: 5.85, "6": 5.8, "12": 5.9 },
-      "2024-03-01T06:00Z": { "1": 5.85, 2: 5.9, "6": 5.85, "12": 5.95 },
-      "2024-04-01T06:00Z": { "1": 5.9, 2: 5.95, "6": 5.9, "12": 6.0 },
-      "2024-05-01T06:00Z": { "1": 5.88, 2: 5.92, "6": 5.88, "12": 5.98 },
-      "2024-06-01T06:00Z": { "1": 5.85, 2: 5.9, "6": 5.85, "12": 5.95 },
-      "2024-08-01T06:00Z": { "1": 5.8, 2: 5.85, "6": 5.8, "12": 5.9 },
-      "2024-09-01T06:00Z": { "1": 5.78, 2: 5.82, "6": 5.78, "12": 5.88 },
-      "2024-10-01T06:00Z": { "1": 5.75, 2: 5.8, "6": 5.75, "12": 5.85 },
-    },
-  },
-  {
-    entity: "BCR",
-    currency: "USD",
-    amount: 1500,
-    netRatesByDate: {
-      "2024-01-01T06:00Z": { "1": 3.51, "3": 3.6, "6": 3.73, "12": 3.94 },
-      "2024-02-01T06:00Z": { "1": 3.55, "3": 3.65, "6": 3.77, "12": 3.98 },
-      "2024-03-01T06:00Z": { "1": 3.6, "3": 3.7, "6": 3.81, "12": 4.02 },
-      "2024-04-01T06:00Z": { "1": 3.65, "3": 3.75, "6": 3.85, "12": 4.06 },
-      "2024-05-01T06:00Z": { "1": 3.62, "3": 3.72, "6": 3.83, "12": 4.04 },
-      "2024-06-01T06:00Z": { "1": 3.6, "3": 3.7, "6": 3.81, "12": 4.02 },
-      "2024-08-01T06:00Z": { "1": 3.55, "3": 3.65, "6": 3.77, "12": 3.98 },
-      "2024-09-01T06:00Z": { "1": 3.53, "3": 3.63, "6": 3.75, "12": 3.96 },
-      "2024-10-01T06:00Z": { "1": 3.51, "3": 3.61, "6": 3.73, "12": 3.94 },
-    },
-  },
-  {
-    entity: "BN",
-    currency: "CRC",
-    amount: 1000000,
-    netRatesByDate: {
-      "2024-01-01T06:00Z": { "1": 6.16, 2: 6.2, "6": 6.16, "12": 6.25 },
-      "2024-02-01T06:00Z": { "1": 6.2, 2: 6.25, "6": 6.2, "12": 6.3 },
-      "2024-03-01T06:00Z": { "1": 6.25, 2: 6.3, "6": 6.25, "12": 6.35 },
-      "2024-04-01T06:00Z": { "1": 6.3, 2: 6.35, "6": 6.3, "12": 6.4 },
-      "2024-05-01T06:00Z": { "1": 6.28, 2: 6.32, "6": 6.28, "12": 6.38 },
-      "2024-06-01T06:00Z": { "1": 6.25, 2: 6.3, "6": 6.25, "12": 6.35 },
-      "2024-08-01T06:00Z": { "1": 6.2, 2: 6.25, "6": 6.2, "12": 6.3 },
-      "2024-09-01T06:00Z": { "1": 6.18, 2: 6.22, "6": 6.18, "12": 6.28 },
-      "2024-10-01T06:00Z": { "1": 6.15, 2: 6.2, "6": 6.15, "12": 6.25 },
-    },
-  },
-  {
-    entity: "BN",
-    currency: "USD",
-    amount: 1500,
-    netRatesByDate: {
-      "2024-01-01T06:00Z": { "1": 3.56, "3": 3.65, "6": 3.78, "12": 3.99 },
-      "2024-02-01T06:00Z": { "1": 3.6, "3": 3.7, "6": 3.82, "12": 4.03 },
-      "2024-03-01T06:00Z": { "1": 3.65, "3": 3.75, "6": 3.86, "12": 4.07 },
-      "2024-04-01T06:00Z": { "1": 3.7, "3": 3.8, "6": 3.9, "12": 4.11 },
-      "2024-05-01T06:00Z": { "1": 3.67, "3": 3.77, "6": 3.88, "12": 4.09 },
-      "2024-06-01T06:00Z": { "1": 3.65, "3": 3.75, "6": 3.86, "12": 4.07 },
-      "2024-08-01T06:00Z": { "1": 3.6, "3": 3.7, "6": 3.82, "12": 4.03 },
-      "2024-09-01T06:00Z": { "1": 3.58, "3": 3.68, "6": 3.8, "12": 4.01 },
-      "2024-10-01T06:00Z": { "1": 3.56, "3": 3.66, "6": 3.78, "12": 3.99 },
-    },
-  },
-];
+// Build historical rates from previous monthly rates
+const buildHistoricalRates = (
+  monthlyRates: Record<string, EntityRates[]>,
+): EntityHistoricalRates[] => {
+  const entities = new Set(
+    Object.values(monthlyRates).flatMap((rates) =>
+      rates.map((rate) => rate.entity),
+    ),
+  );
+
+  const result: EntityHistoricalRates[] = [];
+
+  entities.forEach((entity) => {
+    const currencies = new Set<string>();
+    const amounts = new Map<string, number>();
+
+    // First pass: collect all currencies and their amounts
+    Object.entries(monthlyRates).forEach(([, rates]) => {
+      const entityData = rates.find((r) => r.entity === entity);
+      if (entityData) {
+        Object.values(entityData.ratesByTerm).forEach((ratesByAmount) => {
+          ratesByAmount.forEach((rate) => {
+            currencies.add(rate.currency);
+            if (!amounts.has(rate.currency)) {
+              amounts.set(rate.currency, rate.min);
+            }
+          });
+        });
+      }
+    });
+
+    // Second pass: build historical rates for each currency
+    currencies.forEach((currency) => {
+      const netRatesByDate: Record<string, Record<string, number>> = {};
+
+      Object.entries(monthlyRates).forEach(([date, rates]) => {
+        const entityData = rates.find((r) => r.entity === entity);
+        if (entityData) {
+          const dateRates: Record<string, number> = {};
+
+          Object.entries(entityData.ratesByTerm).forEach(
+            ([term, ratesByAmount]) => {
+              const rate = ratesByAmount.find(
+                (r) =>
+                  r.currency === currency && r.min === amounts.get(currency),
+              );
+
+              if (rate) {
+                dateRates[term] = rate.net;
+              }
+            },
+          );
+
+          if (Object.keys(dateRates).length > 0) {
+            netRatesByDate[date] = dateRates;
+          }
+        }
+      });
+
+      if (Object.keys(netRatesByDate).length > 0) {
+        result.push({
+          entity,
+          currency,
+          amount: amounts.get(currency)!,
+          netRatesByDate,
+        });
+      }
+    });
+  });
+
+  return result;
+};
 
 const config = {
   BAC: {
@@ -135,14 +109,26 @@ const config = {
     color: "hsl(201, 96%, 32%)",
   },
   BN: {
-    label: "Banco Nacional",
+    label: "Banco Nacional de Costa Rica",
     color: "hsl(142, 76%, 36%)",
   },
 } satisfies ChartConfig;
 
-export function HistoricalRatesChart() {
+type HistoricalRatesChartProps = {
+  monthlyRatesMap: Record<string, EntityRates[]>;
+};
+
+export function HistoricalRatesChart({
+  monthlyRatesMap,
+}: HistoricalRatesChartProps) {
   const [selectedCurrency, setSelectedCurrency] = useState<string>("CRC");
-  const [selectedTerm, setSelectedTerm] = useState<TermOption>(termOptions[0]);
+  // TODO: Replace with termOptions[0] when more of our data is available
+  const [selectedTerm, setSelectedTerm] = useState<TermOption>(termOptions[1]);
+
+  const historicalRates = useMemo(
+    () => buildHistoricalRates(monthlyRatesMap),
+    [monthlyRatesMap],
+  );
 
   const data = useMemo(() => {
     const currencyRates = historicalRates.filter(
@@ -171,28 +157,39 @@ export function HistoricalRatesChart() {
       "Diciembre",
     ];
 
-    return allDates
-      .map((date) => {
-        const monthIndex = new Date(date).getMonth();
+    return allDates.map((date) => {
+      const monthIndex = new Date(date).getMonth();
 
-        return {
-          month: monthNames[monthIndex],
-          BAC: currencyRates.find((r) => r.entity === "BAC")?.netRatesByDate[
-            date
-          ]?.[term],
-          BCR: currencyRates.find((r) => r.entity === "BCR")?.netRatesByDate[
-            date
-          ]?.[term],
-          BN: currencyRates.find((r) => r.entity === "BN")?.netRatesByDate[
-            date
-          ]?.[term],
-        };
-      })
-      .filter(
-        (point) =>
-          point.BAC !== null || point.BCR !== null || point.BN !== null,
-      );
-  }, [selectedTerm, selectedCurrency]);
+      return {
+        month: monthNames[monthIndex],
+        BAC: currencyRates.find((r) => r.entity === "BAC Credomatic")
+          ?.netRatesByDate[date]?.[term],
+        BCR: currencyRates.find((r) => r.entity === "Banco de Costa Rica")
+          ?.netRatesByDate[date]?.[term],
+        BN: currencyRates.find(
+          (r) => r.entity === "Banco Nacional de Costa Rica",
+        )?.netRatesByDate[date]?.[term],
+      };
+    });
+  }, [historicalRates, selectedTerm.value, selectedCurrency]);
+
+  const [yAxisLowerBound, yAxisUpperBound] = useMemo(() => {
+    const allRates = data.flatMap((entry) =>
+      [entry.BAC, entry.BCR, entry.BN].filter((rate) => rate !== undefined),
+    );
+
+    if (allRates.length === 0) return [0, 7];
+
+    const minRate = Math.min(...allRates);
+    const maxRate = Math.max(...allRates);
+
+    // Round down to previous 0.25
+    const lowerBound = Math.floor(minRate * 4) / 4;
+    // Round up to next 0.25 and add 0.5
+    const upperBound = Math.ceil(maxRate * 4) / 4 + 0.5;
+
+    return [lowerBound, upperBound];
+  }, [data]);
 
   return (
     <div className="flex flex-col">
@@ -238,6 +235,8 @@ export function HistoricalRatesChart() {
                 key={option.label}
                 value={option.label}
                 aria-label={`Cambiar a ${option.label}`}
+                // TODO: Remove when more of our data is available
+                disabled={option.label === "1 mes"}
               >
                 {`${option.label}`}
               </ToggleGroupItem>
@@ -245,7 +244,7 @@ export function HistoricalRatesChart() {
           </ToggleGroup>
         </div>
       </div>
-      <ChartContainer config={config}>
+      <ChartContainer config={config} aspect={1.25} maxHeight={400}>
         <LineChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -261,7 +260,7 @@ export function HistoricalRatesChart() {
             axisLine={false}
             tickMargin={8}
             orientation="right"
-            domain={[0, selectedCurrency === "CRC" ? 8 : 5]}
+            domain={[yAxisLowerBound, yAxisUpperBound]}
             tickFormatter={(value) => `${value}%`}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
