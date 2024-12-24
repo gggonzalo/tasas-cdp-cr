@@ -270,7 +270,7 @@ export function HistoricalRatesChart({
           </ToggleGroup>
         </div>
       </div>
-      <ChartContainer config={config} aspect={1.25} maxHeight={400}>
+      <ChartContainer config={config} maxHeight={400}>
         <LineChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis

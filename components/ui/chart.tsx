@@ -44,7 +44,7 @@ const ChartContainer = React.forwardRef<
     aspect?: number;
     maxHeight?: number;
   }
->(({ id, className, children, config, aspect, maxHeight, ...props }, ref) => {
+>(({ id, className, children, config, maxHeight, ...props }, ref) => {
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
 
@@ -60,10 +60,8 @@ const ChartContainer = React.forwardRef<
         {...props}
       >
         <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer
-          aspect={aspect}
-          maxHeight={maxHeight}
-        >
+
+        <RechartsPrimitive.ResponsiveContainer maxHeight={maxHeight}>
           {children}
         </RechartsPrimitive.ResponsiveContainer>
       </div>
