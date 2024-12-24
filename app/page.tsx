@@ -10,6 +10,18 @@ import julEntitiesRates from "../datos/2024-07/2024-07-01T06.00.00.000Z.json";
 import novEntitiesRates from "../datos/2024-11/2024-11-01T06.00.00.000Z.json";
 import decEntitiesRates from "../datos/2024-12/2024-12-24T19.09.36.216Z.json";
 
+const lastUpdateDate = "2024-12-24T19:09:36.216Z";
+const lastUpdateDateFormatted = new Date(lastUpdateDate).toLocaleDateString(
+  "es-CR",
+  {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  },
+);
+
 const monthlyRatesMap = {
   "2024-01-01T06:00Z": janEntitiesRates,
   "2024-02-01T06:00Z": febEntitiesRates,
@@ -25,16 +37,19 @@ const monthlyRatesMap = {
 export default function Home() {
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-20 px-4 py-10">
-      <div className="space-y-4 text-center">
-        <h1 className="text-balance text-2xl font-bold tracking-tight text-primary sm:text-3xl">
+      <div className="text-center">
+        <h1 className="mb-4 text-balance text-2xl font-bold tracking-tight text-primary sm:text-3xl">
           Tasas de Certificados a Plazo en Costa Rica 💰📈
         </h1>
-        <p className="mx-auto max-w-2xl text-balance text-lg text-muted-foreground sm:text-xl">
+        <p className="mx-auto mb-1 max-w-2xl text-balance text-lg text-secondary-foreground sm:text-xl">
           Lista actualizada de las tasas de interés que ofrecen varias entidades
           financieras en el país. 🔍✨
         </p>
-        {/* TODO: Agregar nota pequena de electronico/desmaterializado, sin renovacion y pago al vencimiento */}
+        <p className="text-xs text-muted-foreground">
+          Última actualización: {lastUpdateDateFormatted}
+        </p>
       </div>
+      {/* TODO: Agregar nota pequena de electronico/desmaterializado, sin renovacion y pago al vencimiento */}
 
       <MultipleTermsTable entitiesRates={decEntitiesRates} />
 
