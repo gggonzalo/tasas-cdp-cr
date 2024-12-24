@@ -43,14 +43,14 @@ type AmountOption = {
 };
 
 const amountOptions: AmountOption[] = [
-  { amount: 250000, currency: "CRC", label: "₡250,000" },
   { amount: 1000000, currency: "CRC", label: "₡1,000,000" },
+  { amount: 2500000, currency: "CRC", label: "₡2,500,000" },
   { amount: 5000000, currency: "CRC", label: "₡5,000,000" },
   { amount: 10000000, currency: "CRC", label: "₡10,000,000" },
   { amount: 1500, currency: "USD", label: "$1,500" },
   { amount: 5000, currency: "USD", label: "$5,000" },
   { amount: 10000, currency: "USD", label: "$10,000" },
-  { amount: 50000, currency: "USD", label: "$50,000" },
+  { amount: 20000, currency: "USD", label: "$20,000" },
 ];
 
 type TableRowRates = {
@@ -163,11 +163,14 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
     () =>
       entitiesRates.map((entityRates) => {
         const getAmountRateForTerm = (term: string) => {
-          const termRates = entityRates.ratesByTerm[term];
+          const currencyRates =
+            entityRates.ratesByCurrency[selectedAmount.currency];
+          if (!currencyRates) return undefined;
+
+          const termRates = currencyRates[term];
 
           return termRates?.find(
             (tr) =>
-              tr.currency === selectedAmount.currency &&
               tr.min <= selectedAmount.amount &&
               (!tr.max || selectedAmount.amount <= tr.max),
           );

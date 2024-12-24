@@ -20,7 +20,8 @@ type TermOption = {
 };
 
 const termOptions = [
-  { value: 1, label: "1 mes" },
+  // TODO: Readd when more data is available
+  // { value: 1, label: "1 mes" },
   { value: 3, label: "3 meses" },
   { value: 6, label: "6 meses" },
   { value: 12, label: "12 meses" },
@@ -46,14 +47,27 @@ const buildHistoricalRates = (
     Object.entries(monthlyRates).forEach(([, rates]) => {
       const entityData = rates.find((r) => r.entity === entity);
       if (entityData) {
-        Object.values(entityData.ratesByTerm).forEach((ratesByAmount) => {
-          ratesByAmount.forEach((rate) => {
-            currencies.add(rate.currency);
-            if (!amounts.has(rate.currency)) {
-              amounts.set(rate.currency, rate.min);
+        Object.entries(entityData.ratesByCurrency).forEach(
+          ([currency, ratesByTerm]) => {
+            currencies.add(currency);
+
+            if (!amounts.has(currency)) {
+              // Only consider specific amounts for CRC and USD
+              const targetAmount = currency === "CRC" ? 1000000 : 1500;
+              const termRates = Object.values(ratesByTerm).flat();
+
+              if (
+                termRates.some(
+                  (rate) =>
+                    rate.min <= targetAmount &&
+                    (!rate.max || targetAmount <= rate.max),
+                )
+              ) {
+                amounts.set(currency, targetAmount);
+              }
             }
-          });
-        });
+          },
+        );
       }
     });
 
@@ -63,21 +77,26 @@ const buildHistoricalRates = (
 
       Object.entries(monthlyRates).forEach(([date, rates]) => {
         const entityData = rates.find((r) => r.entity === entity);
+
         if (entityData) {
           const dateRates: Record<string, number> = {};
+          const currencyRates = entityData.ratesByCurrency[currency];
 
-          Object.entries(entityData.ratesByTerm).forEach(
-            ([term, ratesByAmount]) => {
+          if (currencyRates) {
+            Object.entries(currencyRates).forEach(([term, ratesByAmount]) => {
+              const historicalRateAmount = amounts.get(currency)!;
+
               const rate = ratesByAmount.find(
                 (r) =>
-                  r.currency === currency && r.min === amounts.get(currency),
+                  r.min <= historicalRateAmount &&
+                  (!r.max || historicalRateAmount <= r.max),
               );
 
               if (rate) {
                 dateRates[term] = rate.net;
               }
-            },
-          );
+            });
+          }
 
           if (Object.keys(dateRates).length > 0) {
             netRatesByDate[date] = dateRates;
@@ -111,6 +130,10 @@ const config = {
   BN: {
     label: "Banco Nacional de Costa Rica",
     color: "hsl(142, 76%, 36%)",
+  },
+  SCOTIA: {
+    label: "Scotiabank",
+    color: "hsl(0, 84%, 60%)",
   },
 } satisfies ChartConfig;
 
@@ -169,27 +192,32 @@ export function HistoricalRatesChart({
         BN: currencyRates.find(
           (r) => r.entity === "Banco Nacional de Costa Rica",
         )?.netRatesByDate[date]?.[term],
+        SCOTIA: currencyRates.find((r) => r.entity === "Scotiabank")
+          ?.netRatesByDate[date]?.[term],
       };
     });
   }, [historicalRates, selectedTerm.value, selectedCurrency]);
 
-  const [yAxisLowerBound, yAxisUpperBound] = useMemo(() => {
-    const allRates = data.flatMap((entry) =>
-      [entry.BAC, entry.BCR, entry.BN].filter((rate) => rate !== undefined),
+  const yAxisDomain = useMemo(() => {
+    const allRates = Object.values(monthlyRatesMap).flatMap((rates) =>
+      rates.flatMap((rate) =>
+        Object.values(rate.ratesByCurrency).flatMap((currencyRates) =>
+          Object.values(currencyRates).flatMap((termRates) =>
+            termRates.map((r) => r.net),
+          ),
+        ),
+      ),
     );
 
     if (allRates.length === 0) return [0, 7];
 
-    const minRate = Math.min(...allRates);
     const maxRate = Math.max(...allRates);
 
-    // Round down to previous 0.25
-    const lowerBound = Math.floor(minRate * 4) / 4;
-    // Round up to next 0.25 and add 0.5
-    const upperBound = Math.ceil(maxRate * 4) / 4 + 0.5;
+    // Round up to next integer and add 1
+    const upperBound = Math.ceil(maxRate) + 1;
 
-    return [lowerBound, upperBound];
-  }, [data]);
+    return [0, upperBound];
+  }, [monthlyRatesMap]);
 
   return (
     <div className="flex flex-col">
@@ -235,8 +263,6 @@ export function HistoricalRatesChart({
                 key={option.label}
                 value={option.label}
                 aria-label={`Cambiar a ${option.label}`}
-                // TODO: Remove when more of our data is available
-                disabled={option.label === "1 mes"}
               >
                 {`${option.label}`}
               </ToggleGroupItem>
@@ -260,7 +286,7 @@ export function HistoricalRatesChart({
             axisLine={false}
             tickMargin={8}
             orientation="right"
-            domain={[yAxisLowerBound, yAxisUpperBound]}
+            domain={yAxisDomain}
             tickFormatter={(value) => `${value}%`}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
@@ -286,6 +312,14 @@ export function HistoricalRatesChart({
             strokeWidth={2}
             dot={false}
           />
+          {/* TODO: Readd when scotiabank has more than 1 month of historical data */}
+          {/* <Line
+            dataKey="SCOTIA"
+            type="linear"
+            stroke={config.SCOTIA.color}
+            strokeWidth={2}
+            dot={false}
+          /> */}
         </LineChart>
       </ChartContainer>
     </div>
