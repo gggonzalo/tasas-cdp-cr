@@ -120,19 +120,19 @@ const buildHistoricalRates = (
 
 const config = {
   BAC: {
-    label: "BAC Credomatic",
+    label: "BAC",
     color: "hsl(0, 84%, 60%)",
   },
   BCR: {
-    label: "Banco de Costa Rica",
+    label: "BCR",
     color: "hsl(201, 96%, 32%)",
   },
   BN: {
-    label: "Banco Nacional de Costa Rica",
+    label: "BN",
     color: "hsl(142, 76%, 36%)",
   },
   SCOTIA: {
-    label: "Scotiabank",
+    label: "Scotia",
     color: "hsl(0, 84%, 60%)",
   },
 } satisfies ChartConfig;

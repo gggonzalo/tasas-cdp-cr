@@ -122,6 +122,9 @@ const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "entity",
     header: "Entidad",
+    cell: ({ row }) => (
+      <span className="text-nowrap">{row.getValue("entity")}</span>
+    ),
   },
   {
     accessorKey: "term1",
