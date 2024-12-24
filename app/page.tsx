@@ -19,6 +19,8 @@ const lastUpdateDateFormatted = new Date(lastUpdateDate).toLocaleDateString(
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
+    timeZone: "America/Costa_Rica",
+    timeZoneName: "shortGeneric",
   },
 );
 
