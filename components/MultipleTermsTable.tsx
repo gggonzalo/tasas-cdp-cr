@@ -251,7 +251,12 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
                 {amountOptions
                   .filter((o) => o.currency === "CRC")
                   .map((option) => (
-                    <SelectItem key={option.label} value={option.label}>
+                    <SelectItem
+                      key={option.label}
+                      value={option.label}
+                      // TODO: Remove until we have a better idea on how to show different amounts that affect all rates more evenly (input instead of a select?)
+                      disabled={option.amount > 1000000}
+                    >
                       {option.label}
                     </SelectItem>
                   ))}
@@ -262,7 +267,12 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
                 {amountOptions
                   .filter((o) => o.currency === "USD")
                   .map((option) => (
-                    <SelectItem key={option.label} value={option.label}>
+                    <SelectItem
+                      key={option.label}
+                      value={option.label}
+                      // TODO: Same as above
+                      disabled={option.amount > 1500}
+                    >
                       {option.label}
                     </SelectItem>
                   ))}
