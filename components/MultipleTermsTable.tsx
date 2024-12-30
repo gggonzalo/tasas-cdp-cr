@@ -209,13 +209,15 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
   return (
     <div className="flex flex-col">
       <div className="mb-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           <h2 className="text-lg font-semibold">
             Tasas por plazo ({selectedAmount.label})
           </h2>
           <Popover>
             <PopoverTrigger>
-              <Info className="text-muted-foreground" size={16} />
+              <Button size="icon" variant="ghost">
+                <Info />
+              </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto">
               <p className="text-center">
