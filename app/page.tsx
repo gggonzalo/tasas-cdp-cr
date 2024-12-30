@@ -47,7 +47,7 @@ export default function Home() {
           Lista actualizada de las tasas de interés que ofrecen varias entidades
           financieras en el país. 🔍✨
         </p>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-balance text-xs text-muted-foreground">
           Última actualización: {lastUpdateDateFormatted}
         </p>
       </div>

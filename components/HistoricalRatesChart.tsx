@@ -189,9 +189,8 @@ export function HistoricalRatesChart({
           ?.netRatesByDate[date]?.[term],
         BCR: currencyRates.find((r) => r.entity === "Banco de Costa Rica")
           ?.netRatesByDate[date]?.[term],
-        BN: currencyRates.find(
-          (r) => r.entity === "Banco Nacional de Costa Rica",
-        )?.netRatesByDate[date]?.[term],
+        BN: currencyRates.find((r) => r.entity === "Banco Nacional")
+          ?.netRatesByDate[date]?.[term],
         SCOTIA: currencyRates.find((r) => r.entity === "Scotiabank")
           ?.netRatesByDate[date]?.[term],
       };
