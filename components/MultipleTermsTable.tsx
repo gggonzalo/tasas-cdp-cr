@@ -34,7 +34,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 type AmountOption = {
   amount: number;
@@ -213,11 +213,11 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
           <h2 className="text-lg font-semibold">
             Tasas por plazo ({selectedAmount.label})
           </h2>
-          <Tooltip delayDuration={0}>
-            <TooltipTrigger>
+          <Popover>
+            <PopoverTrigger>
               <Info className="text-muted-foreground" size={16} />
-            </TooltipTrigger>
-            <TooltipContent>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto">
               <p className="text-center">
                 1 mes = 30 días
                 <br />
@@ -227,8 +227,8 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
                 <br />
                 12 meses = 365 días
               </p>
-            </TooltipContent>
-          </Tooltip>
+            </PopoverContent>
+          </Popover>
         </div>
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
           <Label htmlFor="amount">Monto</Label>
