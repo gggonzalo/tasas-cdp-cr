@@ -288,7 +288,10 @@ export function HistoricalRatesChart({
             domain={yAxisDomain}
             tickFormatter={(value) => `${value}%`}
           />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent formatter={(value) => `${value}%`} />}
+          />
           <ChartLegend content={<ChartLegendContent />} />
           <Line
             dataKey="BAC"
