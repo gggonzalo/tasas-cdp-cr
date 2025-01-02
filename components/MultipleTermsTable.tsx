@@ -223,7 +223,7 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto">
-              <p className="text-center">
+              <p className="text-center text-sm">
                 1 mes = 30 días
                 <br />
                 3 meses = 90 días
