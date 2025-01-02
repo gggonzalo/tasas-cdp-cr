@@ -1,12 +1,22 @@
 "use client";
 
-import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 export function DarkModeToggle() {
+  const [mounted, setMounted] = useState(false);
+
   const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <Button

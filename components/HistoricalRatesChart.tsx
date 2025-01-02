@@ -11,8 +11,16 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useMemo, useState } from "react";
-import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
-import { Separator } from "./ui/separator";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Separator } from "@/components/ui/separator";
 
 type TermOption = {
   value: number;
@@ -144,6 +152,8 @@ type HistoricalRatesChartProps = {
 export function HistoricalRatesChart({
   monthlyRatesMap,
 }: HistoricalRatesChartProps) {
+  // TODO: Implement functionality when we have 2 months of data for 2025
+  const [selectedYear, setSelectedYear] = useState<string>("2024");
   const [selectedCurrency, setSelectedCurrency] = useState<string>("CRC");
   // TODO: Replace with termOptions[0] when more of our data is available
   const [selectedTerm, setSelectedTerm] = useState<TermOption>(termOptions[1]);
@@ -165,36 +175,18 @@ export function HistoricalRatesChart({
     ).sort();
 
     const term = selectedTerm.value;
-    const monthNames = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ];
 
-    return allDates.map((date) => {
-      const monthIndex = new Date(date).getMonth();
-
-      return {
-        month: monthNames[monthIndex],
-        BAC: currencyRates.find((r) => r.entity === "BAC Credomatic")
-          ?.netRatesByDate[date]?.[term],
-        BCR: currencyRates.find((r) => r.entity === "Banco de Costa Rica")
-          ?.netRatesByDate[date]?.[term],
-        BN: currencyRates.find((r) => r.entity === "Banco Nacional")
-          ?.netRatesByDate[date]?.[term],
-        SCOTIA: currencyRates.find((r) => r.entity === "Scotiabank")
-          ?.netRatesByDate[date]?.[term],
-      };
-    });
+    return allDates.map((date) => ({
+      date,
+      BAC: currencyRates.find((r) => r.entity === "BAC Credomatic")
+        ?.netRatesByDate[date]?.[term],
+      BCR: currencyRates.find((r) => r.entity === "Banco de Costa Rica")
+        ?.netRatesByDate[date]?.[term],
+      BN: currencyRates.find((r) => r.entity === "Banco Nacional")
+        ?.netRatesByDate[date]?.[term],
+      SCOTIA: currencyRates.find((r) => r.entity === "Scotiabank")
+        ?.netRatesByDate[date]?.[term],
+    }));
   }, [historicalRates, selectedTerm.value, selectedCurrency]);
 
   const yAxisDomain = useMemo(() => {
@@ -224,61 +216,70 @@ export function HistoricalRatesChart({
         <div className="flex flex-col gap-1.5">
           <h2 className="text-lg font-semibold">Datos históricos</h2>
           <p className="text-sm text-muted-foreground">
-            Histórico de tasas netas para certificados a {selectedTerm.label} (
-            {selectedCurrency === "CRC" ? "₡1,000,000" : "$1,500"}).
+            Histórico de tasas netas para certificados de{" "}
+            {selectedCurrency === "CRC" ? "₡1,000,000" : "$1,500"}.
           </p>
         </div>
-        <div className="flex flex-col items-start gap-3 lg:flex-row lg:items-center">
-          <ToggleGroup
-            type="single"
-            value={selectedCurrency}
-            onValueChange={(value) => {
-              if (value) setSelectedCurrency(value);
-            }}
-          >
-            <ToggleGroupItem value="CRC" aria-label="Cambiar a CRC">
-              CRC
-            </ToggleGroupItem>
-            <ToggleGroupItem value="USD" aria-label="Cambiar a USD">
-              USD
-            </ToggleGroupItem>
-          </ToggleGroup>
-          <Separator
-            decorative
-            orientation="vertical"
-            className="hidden lg:block"
-          />
-          <ToggleGroup
-            type="single"
-            value={selectedTerm.label}
-            onValueChange={(value) => {
-              const option = termOptions.find((o) => o.label === value);
-
-              if (option) setSelectedTerm(option);
-            }}
-          >
-            {termOptions.map((option) => (
-              <ToggleGroupItem
-                key={option.label}
-                value={option.label}
-                aria-label={`Cambiar a ${option.label}`}
-              >
-                {`${option.label}`}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+          <Label htmlFor="year">Año</Label>
+          <Select value={selectedYear} onValueChange={setSelectedYear}>
+            <SelectTrigger id="year" className="w-[90px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2024">2024</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+      </div>
+      <div className="mb-3 flex flex-col items-start gap-2 lg:flex-row lg:items-stretch">
+        <ToggleGroup
+          type="single"
+          value={selectedCurrency}
+          onValueChange={(value) => {
+            if (value) setSelectedCurrency(value);
+          }}
+        >
+          <ToggleGroupItem value="CRC">CRC</ToggleGroupItem>
+          <ToggleGroupItem value="USD">USD</ToggleGroupItem>
+        </ToggleGroup>
+        <Separator
+          className="hidden lg:block lg:h-auto"
+          decorative
+          orientation="vertical"
+        />
+        <ToggleGroup
+          type="single"
+          value={selectedTerm.label}
+          onValueChange={(value) => {
+            const option = termOptions.find((o) => o.label === value);
+
+            if (option) setSelectedTerm(option);
+          }}
+        >
+          {termOptions.map((option) => (
+            <ToggleGroupItem key={option.label} value={option.label}>
+              {`${option.label}`}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </div>
       <ChartContainer config={config} maxHeight={400}>
         <LineChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="month"
+            dataKey="date"
             tickLine={false}
             axisLine={false}
             tickMargin={8}
             padding={{ left: 16, right: 16 }}
-            tickFormatter={(value) => value.slice(0, 3)}
+            tickFormatter={(value) =>
+              new Date(value).toLocaleDateString("es-CR", {
+                day: "2-digit",
+                month: "short",
+                timeZone: "America/Costa_Rica",
+              })
+            }
           />
           <YAxis
             tickLine={false}
@@ -290,7 +291,18 @@ export function HistoricalRatesChart({
           />
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent formatter={(value) => `${value}%`} />}
+            content={
+              <ChartTooltipContent
+                formatter={(value) => `${value}%`}
+                labelFormatter={(value) =>
+                  new Date(value).toLocaleDateString("es-CR", {
+                    day: "numeric",
+                    month: "long",
+                    timeZone: "America/Costa_Rica",
+                  })
+                }
+              />
+            }
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Line

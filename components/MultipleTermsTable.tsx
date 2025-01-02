@@ -34,7 +34,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type AmountOption = {
   amount: number;
@@ -42,15 +46,16 @@ type AmountOption = {
   label: string;
 };
 
+// TODO: Remove commented options until we have a better idea on how to show different amounts that affect all rates more evenly (input instead of a select?)
 const amountOptions: AmountOption[] = [
   { amount: 1000000, currency: "CRC", label: "₡1,000,000" },
-  { amount: 2500000, currency: "CRC", label: "₡2,500,000" },
-  { amount: 5000000, currency: "CRC", label: "₡5,000,000" },
-  { amount: 10000000, currency: "CRC", label: "₡10,000,000" },
+  // { amount: 2500000, currency: "CRC", label: "₡2,500,000" },
+  // { amount: 5000000, currency: "CRC", label: "₡5,000,000" },
+  // { amount: 10000000, currency: "CRC", label: "₡10,000,000" },
   { amount: 1500, currency: "USD", label: "$1,500" },
-  { amount: 5000, currency: "USD", label: "$5,000" },
-  { amount: 10000, currency: "USD", label: "$10,000" },
-  { amount: 20000, currency: "USD", label: "$20,000" },
+  // { amount: 5000, currency: "USD", label: "$5,000" },
+  // { amount: 10000, currency: "USD", label: "$10,000" },
+  // { amount: 20000, currency: "USD", label: "$20,000" },
 ];
 
 type TableRowRates = {
@@ -210,11 +215,9 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
     <div className="flex flex-col">
       <div className="mb-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
         <div className="flex items-center gap-1">
-          <h2 className="text-lg font-semibold">
-            Tasas por plazo ({selectedAmount.label})
-          </h2>
+          <h2 className="text-lg font-semibold">Tasas por plazo</h2>
           <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
               <Button size="icon" variant="ghost">
                 <Info />
               </Button>
@@ -251,12 +254,7 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
                 {amountOptions
                   .filter((o) => o.currency === "CRC")
                   .map((option) => (
-                    <SelectItem
-                      key={option.label}
-                      value={option.label}
-                      // TODO: Remove until we have a better idea on how to show different amounts that affect all rates more evenly (input instead of a select?)
-                      disabled={option.amount > 1000000}
-                    >
+                    <SelectItem key={option.label} value={option.label}>
                       {option.label}
                     </SelectItem>
                   ))}
@@ -267,12 +265,7 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
                 {amountOptions
                   .filter((o) => o.currency === "USD")
                   .map((option) => (
-                    <SelectItem
-                      key={option.label}
-                      value={option.label}
-                      // TODO: Same as above
-                      disabled={option.amount > 1500}
-                    >
+                    <SelectItem key={option.label} value={option.label}>
                       {option.label}
                     </SelectItem>
                   ))}
