@@ -216,8 +216,7 @@ export function HistoricalRatesChart({
         <div className="flex flex-col gap-1.5">
           <h2 className="text-lg font-semibold">Datos históricos</h2>
           <p className="text-sm text-muted-foreground">
-            Histórico de tasas netas para certificados de{" "}
-            {selectedCurrency === "CRC" ? "₡1,000,000" : "$1,500"}.
+            Histórico de tasas de interés netas.
           </p>
         </div>
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
@@ -240,8 +239,8 @@ export function HistoricalRatesChart({
             if (value) setSelectedCurrency(value);
           }}
         >
-          <ToggleGroupItem value="CRC">CRC</ToggleGroupItem>
-          <ToggleGroupItem value="USD">USD</ToggleGroupItem>
+          <ToggleGroupItem value="CRC">₡1,000,000</ToggleGroupItem>
+          <ToggleGroupItem value="USD">$1,500</ToggleGroupItem>
         </ToggleGroup>
         <Separator
           className="hidden lg:block lg:h-auto"
