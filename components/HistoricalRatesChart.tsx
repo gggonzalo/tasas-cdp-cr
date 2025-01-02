@@ -216,7 +216,8 @@ export function HistoricalRatesChart({
         <div className="flex flex-col gap-1.5">
           <h2 className="text-lg font-semibold">Datos históricos</h2>
           <p className="text-sm text-muted-foreground">
-            Histórico de tasas de interés netas.
+            Histórico de tasas de interés netas. Utilice los controles para
+            filtrar los datos por año, moneda y plazo.
           </p>
         </div>
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
