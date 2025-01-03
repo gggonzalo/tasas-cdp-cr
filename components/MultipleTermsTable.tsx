@@ -236,8 +236,8 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
             </Popover>
           </div>
           <p className="text-sm text-muted-foreground">
-            Las tasas se muestran en formato: tasa bruta /{" "}
-            <span className="font-semibold">tasa neta</span>. Haga clic en los
+            Las tasas se muestran en formato tasa bruta /{" "}
+            <span className="font-semibold">tasa neta</span>. Utilice los
             encabezados para ordenar por{" "}
             <span className="font-semibold">tasa neta</span>.
           </p>
