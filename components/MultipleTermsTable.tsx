@@ -8,7 +8,6 @@ import {
   TableBody,
   TableCell,
   Table,
-  TableCaption,
 } from "@/components/ui/table";
 import {
   ColumnDef,
@@ -213,27 +212,35 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
-        <div className="flex items-center gap-1">
-          <h2 className="text-lg font-semibold">Tasas por plazo</h2>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="icon" variant="ghost">
-                <Info />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto">
-              <p className="text-center text-sm">
-                1 mes = 30 días
-                <br />
-                3 meses = 90 días
-                <br />
-                6 meses = 180 días
-                <br />
-                12 meses = 365 días
-              </p>
-            </PopoverContent>
-          </Popover>
+      <div className="mb-4 flex flex-col gap-5 lg:flex-row lg:justify-between">
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center gap-1">
+            <h2 className="text-lg font-semibold">Tasas por plazo</h2>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button size="icon" variant="ghost">
+                  <Info />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto">
+                <p className="text-center text-sm">
+                  1 mes = 30 días
+                  <br />
+                  3 meses = 90 días
+                  <br />
+                  6 meses = 180 días
+                  <br />
+                  12 meses = 365 días
+                </p>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Las tasas se muestran en formato: tasa bruta /{" "}
+            <span className="font-semibold">tasa neta</span>. Haga clic en los
+            encabezados para ordenar por{" "}
+            <span className="font-semibold">tasa neta</span>.
+          </p>
         </div>
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
           <Label htmlFor="amount">Monto</Label>
@@ -274,7 +281,7 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
           </Select>
         </div>
       </div>
-      <div className="relative mb-3 w-full overflow-auto">
+      <div className="relative w-full overflow-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -303,12 +310,6 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
           </TableBody>
         </Table>
       </div>
-      <p className="text-xs text-muted-foreground">
-        Las tasas se muestran en formato: tasa bruta /{" "}
-        <span className="font-semibold">tasa neta</span>. Haga clic en los
-        encabezados para ordenar por{" "}
-        <span className="font-semibold">tasa neta</span>.
-      </p>
     </div>
   );
 }
