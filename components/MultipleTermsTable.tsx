@@ -274,40 +274,41 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
           </Select>
         </div>
       </div>
-
-      <Table>
-        <TableCaption className="italic">
-          Las tasas se muestran en formato: tasa bruta /{" "}
-          <span className="font-semibold">tasa neta</span>. Haga clic en los
-          encabezados para ordenar por{" "}
-          <span className="font-semibold">tasa neta</span>.
-        </TableCaption>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="[&:has(button)]:px-1">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getAllCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <div className="relative mb-3 w-full overflow-auto">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} className="[&:has(button)]:px-1">
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getAllCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Las tasas se muestran en formato: tasa bruta /{" "}
+        <span className="font-semibold">tasa neta</span>. Haga clic en los
+        encabezados para ordenar por{" "}
+        <span className="font-semibold">tasa neta</span>.
+      </p>
     </div>
   );
 }
