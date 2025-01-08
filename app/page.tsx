@@ -44,8 +44,8 @@ export default function Home() {
           Tasas de Certificados a Plazo en Costa Rica 💰📈
         </h1>
         <p className="mx-auto mb-1 max-w-2xl text-balance text-lg text-secondary-foreground sm:text-xl">
-          Lista actualizada de las tasas de interés que ofrecen varias entidades
-          financieras en el país. 🔍✨
+          Todas las tasas de interés que ofrecen las entidades financieras en
+          Costa Rica, en un solo lugar. 🔍✨
         </p>
         <p className="text-balance text-xs text-muted-foreground">
           Última actualización: {lastUpdateDateFormatted}
