@@ -169,5 +169,20 @@
         ]
       }
     }
+  },
+  {
+    "entity": "Banco Popular",
+    "ratesByCurrency": {
+      "CRC": {
+        "3": [{ "min": 0, "max": null, "gross": 4.55, "net": 4.05 }],
+        "6": [{ "min": 0, "max": null, "gross": 5.55, "net": 4.94 }],
+        "12": [{ "min": 0, "max": null, "gross": 6.0, "net": 5.34 }]
+      },
+      "USD": {
+        "3": [{ "min": 0, "max": null, "gross": 1.65, "net": 1.47 }],
+        "6": [{ "min": 0, "max": null, "gross": 2.6, "net": 2.31 }],
+        "12": [{ "min": 0, "max": null, "gross": 3.85, "net": 3.43 }]
+      }
+    }
   }
 ]

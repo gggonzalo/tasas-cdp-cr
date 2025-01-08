@@ -139,6 +139,10 @@ const config = {
     label: "BN",
     color: "hsl(142, 76%, 36%)",
   },
+  BP: {
+    label: "BP",
+    color: "hsl(28, 80%, 50%)",
+  },
   SCOTIA: {
     label: "Scotia",
     color: "hsl(0, 84%, 60%)",
@@ -183,6 +187,8 @@ export function HistoricalRatesChart({
       BCR: currencyRates.find((r) => r.entity === "Banco de Costa Rica")
         ?.netRatesByDate[date]?.[term],
       BN: currencyRates.find((r) => r.entity === "Banco Nacional")
+        ?.netRatesByDate[date]?.[term],
+      BP: currencyRates.find((r) => r.entity === "Banco Popular")
         ?.netRatesByDate[date]?.[term],
       SCOTIA: currencyRates.find((r) => r.entity === "Scotiabank")
         ?.netRatesByDate[date]?.[term],
@@ -323,6 +329,13 @@ export function HistoricalRatesChart({
             dataKey="BN"
             type="linear"
             stroke={config.BN.color}
+            strokeWidth={2}
+            dot={false}
+          />
+          <Line
+            dataKey="BP"
+            type="linear"
+            stroke={config.BP.color}
             strokeWidth={2}
             dot={false}
           />
