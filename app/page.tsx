@@ -1,16 +1,17 @@
 import { HistoricalRatesChart } from "@/components/HistoricalRatesChart";
 import { MultipleTermsTable } from "@/components/MultipleTermsTable";
-import janEntitiesRates from "../datos/2024-01/2024-01-09T06.00.00.000Z.json";
-import febEntitiesRates from "../datos/2024-02/2024-02-13T06.00.00.000Z.json";
-import marEntitiesRates from "../datos/2024-03/2024-03-19T06.00.00.000Z.json";
-import aprEntitiesRates from "../datos/2024-04/2024-04-04T06.00.00.000Z.json";
-import mayEntitiesRates from "../datos/2024-05/2024-05-14T06.00.00.000Z.json";
-import junEntitiesRates from "../datos/2024-06/2024-06-14T06.00.00.000Z.json";
-import julEntitiesRates from "../datos/2024-07/2024-07-14T06.00.00.000Z.json";
-import novEntitiesRates from "../datos/2024-11/2024-11-02T06.00.00.000Z.json";
-import decEntitiesRates from "../datos/2024-12/2024-12-24T19.09.36.216Z.json";
+import jan24EntitiesRates from "../datos/2024-01/2024-01-09T06.00.00.000Z.json";
+import feb24EntitiesRates from "../datos/2024-02/2024-02-13T06.00.00.000Z.json";
+import mar24EntitiesRates from "../datos/2024-03/2024-03-19T06.00.00.000Z.json";
+import apr24EntitiesRates from "../datos/2024-04/2024-04-04T06.00.00.000Z.json";
+import may24EntitiesRates from "../datos/2024-05/2024-05-14T06.00.00.000Z.json";
+import jun24EntitiesRates from "../datos/2024-06/2024-06-14T06.00.00.000Z.json";
+import jul24EntitiesRates from "../datos/2024-07/2024-07-14T06.00.00.000Z.json";
+import nov24EntitiesRates from "../datos/2024-11/2024-11-02T06.00.00.000Z.json";
+import dec24EntitiesRates from "../datos/2024-12/2024-12-24T19.09.36.216Z.json";
+import jan25EntitiesRates from "../datos/2025-1/2025-01-15T19.27.22.200Z.json";
 
-const lastUpdateDate = "2024-12-24T19:09:36.216Z";
+const lastUpdateDate = "2025-01-15T19:27:22.200Z";
 const lastUpdateDateFormatted = new Date(lastUpdateDate).toLocaleDateString(
   "es-CR",
   {
@@ -25,15 +26,16 @@ const lastUpdateDateFormatted = new Date(lastUpdateDate).toLocaleDateString(
 );
 
 const monthlyRatesMap = {
-  "2024-01-09T06:00Z": janEntitiesRates,
-  "2024-02-13T06:00Z": febEntitiesRates,
-  "2024-03-19T06:00Z": marEntitiesRates,
-  "2024-04-04T06:00Z": aprEntitiesRates,
-  "2024-05-14T06:00Z": mayEntitiesRates,
-  "2024-06-14T06:00Z": junEntitiesRates,
-  "2024-07-14T06:00Z": julEntitiesRates,
-  "2024-11-02T06:00Z": novEntitiesRates,
-  "2024-12-24T19:09:36.216Z": decEntitiesRates,
+  "2024-01-09T06:00Z": jan24EntitiesRates,
+  "2024-02-13T06:00Z": feb24EntitiesRates,
+  "2024-03-19T06:00Z": mar24EntitiesRates,
+  "2024-04-04T06:00Z": apr24EntitiesRates,
+  "2024-05-14T06:00Z": may24EntitiesRates,
+  "2024-06-14T06:00Z": jun24EntitiesRates,
+  "2024-07-14T06:00Z": jul24EntitiesRates,
+  "2024-11-02T06:00Z": nov24EntitiesRates,
+  "2024-12-24T19:09:36.216Z": dec24EntitiesRates,
+  "2025-01-15T19:27:22.200Z": jan25EntitiesRates,
 };
 
 export default function Home() {
@@ -53,7 +55,7 @@ export default function Home() {
       </div>
       {/* TODO: Agregar nota pequena de electronico/desmaterializado, sin renovacion y pago al vencimiento */}
 
-      <MultipleTermsTable entitiesRates={decEntitiesRates} />
+      <MultipleTermsTable entitiesRates={jan25EntitiesRates} />
 
       {/* TODO: Just a single amount per currency will be used to keep historical data. Choose the most common one (pbly the smallest one which meets the min req in all banks) */}
       <HistoricalRatesChart monthlyRatesMap={monthlyRatesMap} />
