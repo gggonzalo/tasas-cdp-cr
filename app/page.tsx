@@ -9,9 +9,10 @@ import jun24EntitiesRates from "../datos/2024-06/2024-06-14T06.00.00.000Z.json";
 import jul24EntitiesRates from "../datos/2024-07/2024-07-14T06.00.00.000Z.json";
 import nov24EntitiesRates from "../datos/2024-11/2024-11-02T06.00.00.000Z.json";
 import dec24EntitiesRates from "../datos/2024-12/2024-12-24T19.09.36.216Z.json";
-import jan25EntitiesRates from "../datos/2025-1/2025-01-15T19.27.22.200Z.json";
+import jan25EntitiesRates from "../datos/2025-01/2025-01-15T19.27.22.200Z.json";
+import feb25EntitiesRates from "../datos/2025-02/2025-02-27T01.45.36.739Z.json";
 
-const lastUpdateDate = "2025-01-15T19:27:22.200Z";
+const lastUpdateDate = "2025-02-27T01:45:36:739Z";
 const lastUpdateDateFormatted = new Date(lastUpdateDate).toLocaleDateString(
   "es-CR",
   {
@@ -36,6 +37,7 @@ const monthlyRatesMap = {
   "2024-11-02T06:00Z": nov24EntitiesRates,
   "2024-12-24T19:09:36.216Z": dec24EntitiesRates,
   "2025-01-15T19:27:22.200Z": jan25EntitiesRates,
+  "2025-02-27T01:45:36.739Z": feb25EntitiesRates,
 };
 
 export default function Home() {
