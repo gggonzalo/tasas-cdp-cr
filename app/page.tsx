@@ -57,7 +57,7 @@ export default function Home() {
       </div>
       {/* TODO: Agregar nota pequena de electronico/desmaterializado, sin renovacion y pago al vencimiento */}
 
-      <MultipleTermsTable entitiesRates={jan25EntitiesRates} />
+      <MultipleTermsTable entitiesRates={feb25EntitiesRates} />
 
       {/* TODO: Just a single amount per currency will be used to keep historical data. Choose the most common one (pbly the smallest one which meets the min req in all banks) */}
       <HistoricalRatesChart monthlyRatesMap={monthlyRatesMap} />

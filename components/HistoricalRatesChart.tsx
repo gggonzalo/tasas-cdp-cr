@@ -156,8 +156,7 @@ type HistoricalRatesChartProps = {
 export function HistoricalRatesChart({
   monthlyRatesMap,
 }: HistoricalRatesChartProps) {
-  // TODO: Implement functionality when we have 2 months of data for 2025
-  const [selectedYear, setSelectedYear] = useState<string>("2024");
+  const [selectedYear, setSelectedYear] = useState<string>("2025");
   const [selectedCurrency, setSelectedCurrency] = useState<string>("CRC");
   // TODO: Replace with termOptions[0] when more of our data is available
   const [selectedTerm, setSelectedTerm] = useState<TermOption>(termOptions[1]);
@@ -176,7 +175,11 @@ export function HistoricalRatesChart({
       new Set(
         currencyRates.flatMap((rate) => Object.keys(rate.netRatesByDate)),
       ),
-    ).sort();
+    )
+      .filter(
+        (date) => new Date(date).getFullYear().toString() === selectedYear,
+      )
+      .sort();
 
     const term = selectedTerm.value;
 
@@ -193,7 +196,7 @@ export function HistoricalRatesChart({
       SCOTIA: currencyRates.find((r) => r.entity === "Scotiabank")
         ?.netRatesByDate[date]?.[term],
     }));
-  }, [historicalRates, selectedTerm.value, selectedCurrency]);
+  }, [historicalRates, selectedTerm.value, selectedCurrency, selectedYear]);
 
   const yAxisDomain = useMemo(() => {
     const allRates = Object.values(monthlyRatesMap).flatMap((rates) =>
@@ -234,6 +237,7 @@ export function HistoricalRatesChart({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="2024">2024</SelectItem>
+              <SelectItem value="2025">2025</SelectItem>
             </SelectContent>
           </Select>
         </div>
