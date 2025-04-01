@@ -343,14 +343,13 @@ export function HistoricalRatesChart({
             strokeWidth={2}
             dot={false}
           />
-          {/* TODO: Readd when scotiabank has more than 1 month of historical data */}
-          {/* <Line
+          <Line
             dataKey="SCOTIA"
             type="linear"
             stroke={config.SCOTIA.color}
             strokeWidth={2}
             dot={false}
-          /> */}
+          />
         </LineChart>
       </ChartContainer>
     </div>
