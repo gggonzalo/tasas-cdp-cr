@@ -11,8 +11,9 @@ import nov24EntitiesRates from "../datos/2024-11/2024-11-02T06.00.00.000Z.json";
 import dec24EntitiesRates from "../datos/2024-12/2024-12-24T19.09.36.216Z.json";
 import jan25EntitiesRates from "../datos/2025-01/2025-01-15T19.27.22.200Z.json";
 import feb25EntitiesRates from "../datos/2025-02/2025-02-27T01.45.36.739Z.json";
+import apr25EntitiesRates from "../datos/2025-04/2025-04-01T17.21.15.037Z.json";
 
-const lastUpdateDate = "2025-02-27T01:45:36.739Z";
+const lastUpdateDate = "2025-04-01T17:21:15.037Z";
 const lastUpdateDateFormatted = new Date(lastUpdateDate).toLocaleDateString(
   "es-CR",
   {
@@ -38,6 +39,7 @@ const monthlyRatesMap = {
   "2024-12-24T19:09:36.216Z": dec24EntitiesRates,
   "2025-01-15T19:27:22.200Z": jan25EntitiesRates,
   "2025-02-27T01:45:36.739Z": feb25EntitiesRates,
+  "2025-04-01T17:21:15.037Z": apr25EntitiesRates,
 };
 
 export default function Home() {
@@ -57,7 +59,7 @@ export default function Home() {
       </div>
       {/* TODO: Agregar nota pequena de electronico/desmaterializado, sin renovacion y pago al vencimiento */}
 
-      <MultipleTermsTable entitiesRates={feb25EntitiesRates} />
+      <MultipleTermsTable entitiesRates={apr24EntitiesRates} />
 
       {/* TODO: Just a single amount per currency will be used to keep historical data. Choose the most common one (pbly the smallest one which meets the min req in all banks) */}
       <HistoricalRatesChart monthlyRatesMap={monthlyRatesMap} />
