@@ -338,6 +338,79 @@
     }
   },
   {
+    "entity": "Banco Popular",
+    "ratesByCurrency": {
+      "CRC": {
+        "1": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 2.9,
+            "net": 2.55
+          }
+        ],
+        "3": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 3.7,
+            "net": 3.26
+          }
+        ],
+        "6": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 4.7,
+            "net": 4.14
+          }
+        ],
+        "12": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 5.3,
+            "net": 4.66
+          }
+        ]
+      },
+      "USD": {
+        "1": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 1.6,
+            "net": 1.41
+          }
+        ],
+        "3": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 2.1,
+            "net": 1.85
+          }
+        ],
+        "6": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 3.85,
+            "net": 3.39
+          }
+        ],
+        "12": [
+          {
+            "min": 0,
+            "max": null,
+            "gross": 4.45,
+            "net": 3.92
+          }
+        ]
+      }
+    }
+  },
+  {
     "entity": "Scotiabank",
     "ratesByCurrency": {
       "CRC": {
