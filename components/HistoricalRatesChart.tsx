@@ -126,29 +126,6 @@ const buildHistoricalRates = (
   return result;
 };
 
-const config = {
-  BAC: {
-    label: "BAC",
-    color: "hsl(0, 84%, 60%)",
-  },
-  BCR: {
-    label: "BCR",
-    color: "hsl(201, 96%, 32%)",
-  },
-  BN: {
-    label: "BN",
-    color: "hsl(142, 76%, 36%)",
-  },
-  BP: {
-    label: "BP",
-    color: "hsl(28, 80%, 50%)",
-  },
-  SCOTIA: {
-    label: "Scotia",
-    color: "hsl(0, 84%, 60%)",
-  },
-} satisfies ChartConfig;
-
 type HistoricalRatesChartProps = {
   monthlyRatesMap: Record<string, EntityRates[]>;
 };
@@ -197,6 +174,53 @@ export function HistoricalRatesChart({
         ?.netRatesByDate[date]?.[term],
     }));
   }, [historicalRates, selectedTerm.value, selectedCurrency, selectedYear]);
+
+  const chartConfig = useMemo(() => {
+    const config: ChartConfig = {};
+
+    const hasEntityData = (
+      entityKey: "BAC" | "BCR" | "BN" | "BP" | "SCOTIA",
+    ) => {
+      return data.some((item) => item[entityKey] !== undefined);
+    };
+
+    if (hasEntityData("BAC")) {
+      config.BAC = {
+        label: "BAC",
+        color: "hsl(0, 84%, 60%)",
+      };
+    }
+
+    if (hasEntityData("BCR")) {
+      config.BCR = {
+        label: "BCR",
+        color: "hsl(201, 96%, 32%)",
+      };
+    }
+
+    if (hasEntityData("BN")) {
+      config.BN = {
+        label: "BN",
+        color: "hsl(142, 76%, 36%)",
+      };
+    }
+
+    if (hasEntityData("BP")) {
+      config.BP = {
+        label: "BP",
+        color: "hsl(28, 80%, 50%)",
+      };
+    }
+
+    if (hasEntityData("SCOTIA")) {
+      config.SCOTIA = {
+        label: "Scotia",
+        color: "hsl(0, 84%, 60%)",
+      };
+    }
+
+    return config;
+  }, [data]);
 
   const yAxisDomain = useMemo(() => {
     const allRates = Object.values(monthlyRatesMap).flatMap((rates) =>
@@ -274,7 +298,7 @@ export function HistoricalRatesChart({
           ))}
         </ToggleGroup>
       </div>
-      <ChartContainer config={config} maxHeight={400}>
+      <ChartContainer config={chartConfig} maxHeight={400}>
         <LineChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -315,41 +339,51 @@ export function HistoricalRatesChart({
             }
           />
           <ChartLegend content={<ChartLegendContent />} />
-          <Line
-            dataKey="BAC"
-            type="linear"
-            stroke={config.BAC.color}
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="BCR"
-            type="linear"
-            stroke={config.BCR.color}
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="BN"
-            type="linear"
-            stroke={config.BN.color}
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="BP"
-            type="linear"
-            stroke={config.BP.color}
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="SCOTIA"
-            type="linear"
-            stroke={config.SCOTIA.color}
-            strokeWidth={2}
-            dot={false}
-          />
+          {"BAC" in chartConfig && (
+            <Line
+              dataKey="BAC"
+              type="linear"
+              stroke={chartConfig.BAC.color}
+              strokeWidth={2}
+              dot={false}
+            />
+          )}
+          {"BCR" in chartConfig && (
+            <Line
+              dataKey="BCR"
+              type="linear"
+              stroke={chartConfig.BCR.color}
+              strokeWidth={2}
+              dot={false}
+            />
+          )}
+          {"BN" in chartConfig && (
+            <Line
+              dataKey="BN"
+              type="linear"
+              stroke={chartConfig.BN.color}
+              strokeWidth={2}
+              dot={false}
+            />
+          )}
+          {"BP" in chartConfig && (
+            <Line
+              dataKey="BP"
+              type="linear"
+              stroke={chartConfig.BP.color}
+              strokeWidth={2}
+              dot={false}
+            />
+          )}
+          {"SCOTIA" in chartConfig && (
+            <Line
+              dataKey="SCOTIA"
+              type="linear"
+              stroke={chartConfig.SCOTIA.color}
+              strokeWidth={2}
+              dot={false}
+            />
+          )}
         </LineChart>
       </ChartContainer>
     </div>
