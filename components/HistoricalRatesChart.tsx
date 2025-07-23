@@ -245,7 +245,7 @@ export function HistoricalRatesChart({
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex flex-col gap-5 lg:flex-row lg:justify-between">
+      <div className="mb-4 flex flex-col gap-5 lg:flex-row lg:justify-between lg:gap-16">
         <div className="flex flex-col gap-1.5">
           <h2 className="text-lg font-semibold">Datos históricos</h2>
           <p className="text-sm text-muted-foreground">

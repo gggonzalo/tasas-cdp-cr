@@ -10,6 +10,11 @@ import {
   Table,
 } from "@/components/ui/table";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   ColumnDef,
   useReactTable,
   getCoreRowModel,
@@ -19,42 +24,28 @@ import {
   Column,
   SortingState,
 } from "@tanstack/react-table";
-import { EntityRates } from "@/types";
+import { EntityRates, RateByAmount } from "@/types";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
-  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
-type AmountOption = {
-  amount: number;
+type CurrencyOption = {
   currency: string;
   label: string;
+  defaultAmount: number;
 };
 
-// TODO: Remove commented options until we have a better idea on how to show different amounts that affect all rates more evenly (input instead of a select?)
-const amountOptions: AmountOption[] = [
-  { amount: 1000000, currency: "CRC", label: "₡1,000,000" },
-  // { amount: 2500000, currency: "CRC", label: "₡2,500,000" },
-  // { amount: 5000000, currency: "CRC", label: "₡5,000,000" },
-  // { amount: 10000000, currency: "CRC", label: "₡10,000,000" },
-  { amount: 1500, currency: "USD", label: "$1,500" },
-  // { amount: 5000, currency: "USD", label: "$5,000" },
-  // { amount: 10000, currency: "USD", label: "$10,000" },
-  // { amount: 20000, currency: "USD", label: "$20,000" },
+const currencyOptions: CurrencyOption[] = [
+  { currency: "CRC", label: "Colones", defaultAmount: 1000000 },
+  { currency: "USD", label: "Dólares", defaultAmount: 1500 },
 ];
 
 type TableRowRates = {
@@ -68,6 +59,9 @@ type TableRow = {
   term3: TableRowRates | null;
   term6: TableRowRates | null;
   term12: TableRowRates | null;
+  allRates: {
+    [key: string]: RateByAmount[];
+  };
 };
 
 const sortRowsByNetRate = (
@@ -106,7 +100,10 @@ const generateTermColSortableHeader = (
   );
 };
 
-const generateTermCell = (termRatesRow: TableRowRates | null) => {
+const generateTermCell = (
+  termRatesRow: TableRowRates | null,
+  allRates: { min: number; max: number | null; gross: number; net: number }[],
+) => {
   if (!termRatesRow)
     return (
       <span className="text-nowrap text-xs text-muted-foreground">
@@ -114,11 +111,38 @@ const generateTermCell = (termRatesRow: TableRowRates | null) => {
       </span>
     );
 
-  return (
+  const hasVariableRates = allRates.length > 1;
+  const rateDisplay = (
     <span className="text-nowrap text-xs">
       {`${termRatesRow.gross.toFixed(2)}%`} /{" "}
       <span className="font-semibold">{`${termRatesRow.net.toFixed(2)}%`}</span>
     </span>
+  );
+
+  if (!hasVariableRates) return rateDisplay;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <span className="text-nowrap text-xs underline decoration-dotted underline-offset-2">
+          {`${termRatesRow.gross.toFixed(2)}%`} /{" "}
+          <span className="font-semibold">{`${termRatesRow.net.toFixed(2)}%`}</span>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p className="mb-1 font-semibold">Tasas variables por monto:</p>
+        {allRates.map((rate, index) => (
+          <p key={index}>
+            {rate.min.toLocaleString()}{" "}
+            {rate.max ? `- ${rate.max.toLocaleString()}` : "o más"}:{" "}
+            <span className="text-nowrap text-xs">
+              {`${rate.gross.toFixed(2)}%`} /{" "}
+              <span className="font-semibold">{`${rate.net.toFixed(2)}%`}</span>
+            </span>
+          </p>
+        ))}
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
@@ -133,25 +157,29 @@ const columns: ColumnDef<TableRow>[] = [
   {
     accessorKey: "term1",
     header: ({ column }) => generateTermColSortableHeader(column, "1 mes"),
-    cell: ({ row }) => generateTermCell(row.getValue("term1")),
+    cell: ({ row }) =>
+      generateTermCell(row.getValue("term1"), row.original.allRates?.["1"]),
     sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term1"),
   },
   {
     accessorKey: "term3",
     header: ({ column }) => generateTermColSortableHeader(column, "3 meses"),
-    cell: ({ row }) => generateTermCell(row.getValue("term3")),
+    cell: ({ row }) =>
+      generateTermCell(row.getValue("term3"), row.original.allRates?.["3"]),
     sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term3"),
   },
   {
     accessorKey: "term6",
     header: ({ column }) => generateTermColSortableHeader(column, "6 meses"),
-    cell: ({ row }) => generateTermCell(row.getValue("term6")),
+    cell: ({ row }) =>
+      generateTermCell(row.getValue("term6"), row.original.allRates?.["6"]),
     sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term6"),
   },
   {
     accessorKey: "term12",
     header: ({ column }) => generateTermColSortableHeader(column, "12 meses"),
-    cell: ({ row }) => generateTermCell(row.getValue("term12")),
+    cell: ({ row }) =>
+      generateTermCell(row.getValue("term12"), row.original.allRates?.["12"]),
     sortingFn: (rowA, rowB) => sortRowsByNetRate(rowA, rowB, "term12"),
   },
 ];
@@ -161,42 +189,60 @@ type MultipleTermsTableProps = {
 };
 
 export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
-  const [selectedAmount, setSelectedAmount] = useState<AmountOption>(
-    amountOptions[0],
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyOption>(
+    currencyOptions[0],
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const filteredRows: TableRow[] = useMemo(
     () =>
       entitiesRates.map((entityRates) => {
-        const getAmountRateForTerm = (term: string) => {
+        const processTermRates = (term: string) => {
           const currencyRates =
-            entityRates.ratesByCurrency[selectedAmount.currency];
-          if (!currencyRates) return undefined;
+            entityRates.ratesByCurrency[selectedCurrency.currency];
+          if (!currencyRates) return { defaultRate: null, allRates: [] };
 
-          const termRates = currencyRates[term];
+          const termRates = currencyRates[term] || [];
 
-          return termRates?.find(
+          // Find the default rate to display (using the default amount)
+          const defaultRate = termRates.find(
             (tr) =>
-              tr.min <= selectedAmount.amount &&
-              (!tr.max || selectedAmount.amount <= tr.max),
+              tr.min <= selectedCurrency.defaultAmount &&
+              (!tr.max || selectedCurrency.defaultAmount <= tr.max),
           );
+
+          return {
+            defaultRate: defaultRate
+              ? { gross: defaultRate.gross, net: defaultRate.net }
+              : null,
+            allRates: termRates,
+          };
         };
 
-        const rate1 = getAmountRateForTerm("1");
-        const rate3 = getAmountRateForTerm("3");
-        const rate6 = getAmountRateForTerm("6");
-        const rate12 = getAmountRateForTerm("12");
+        const { defaultRate: rate1, allRates: allRates1 } =
+          processTermRates("1");
+        const { defaultRate: rate3, allRates: allRates3 } =
+          processTermRates("3");
+        const { defaultRate: rate6, allRates: allRates6 } =
+          processTermRates("6");
+        const { defaultRate: rate12, allRates: allRates12 } =
+          processTermRates("12");
 
         return {
           entity: entityRates.entity,
-          term1: rate1 ? { gross: rate1.gross, net: rate1.net } : null,
-          term3: rate3 ? { gross: rate3.gross, net: rate3.net } : null,
-          term6: rate6 ? { gross: rate6.gross, net: rate6.net } : null,
-          term12: rate12 ? { gross: rate12.gross, net: rate12.net } : null,
+          term1: rate1,
+          term3: rate3,
+          term6: rate6,
+          term12: rate12,
+          allRates: {
+            "1": allRates1,
+            "3": allRates3,
+            "6": allRates6,
+            "12": allRates12,
+          },
         };
       }),
-    [entitiesRates, selectedAmount],
+    [entitiesRates, selectedCurrency],
   );
 
   const table = useReactTable({
@@ -212,70 +258,38 @@ export function MultipleTermsTable({ entitiesRates }: MultipleTermsTableProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="mb-4 flex flex-col gap-5 lg:flex-row lg:justify-between">
+      <div className="mb-4 flex flex-col gap-5 lg:flex-row lg:justify-between lg:gap-16">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-1">
             <h2 className="text-lg font-semibold">Tasas por plazo</h2>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button size="icon" variant="ghost">
-                  <Info />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto">
-                <p className="text-center text-sm">
-                  1 mes = 30 días
-                  <br />
-                  3 meses = 90 días
-                  <br />
-                  6 meses = 180 días
-                  <br />
-                  12 meses = 365 días
-                </p>
-              </PopoverContent>
-            </Popover>
           </div>
           <p className="text-sm text-muted-foreground">
-            Las tasas se muestran en formato: tasa bruta /{" "}
-            <span className="font-semibold">tasa neta</span>. Utilice los
+            Tasas mostradas: bruta / <span className="font-semibold">neta</span>{" "}
+            para ₡1.000.000 o $1.500. Los valores subrayados indican tasas
+            variables por monto (tocar o pasar el cursor para ver). Use los
             encabezados para ordenar por{" "}
             <span className="font-semibold">tasa neta</span>.
           </p>
         </div>
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-          <Label htmlFor="amount">Monto</Label>
+          <Label htmlFor="currency">Moneda</Label>
           <Select
-            value={selectedAmount.label}
+            value={selectedCurrency.currency}
             onValueChange={(value) => {
-              const option = amountOptions.find((o) => o.label === value);
-
-              if (option) setSelectedAmount(option);
+              const option = currencyOptions.find((o) => o.currency === value);
+              if (option) setSelectedCurrency(option);
             }}
           >
-            <SelectTrigger id="amount" className="w-[140px]">
+            <SelectTrigger id="currency" className="w-[110px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Colones</SelectLabel>
-                {amountOptions
-                  .filter((o) => o.currency === "CRC")
-                  .map((option) => (
-                    <SelectItem key={option.label} value={option.label}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-              </SelectGroup>
-              <SelectSeparator />
-              <SelectGroup>
-                <SelectLabel>Dólares</SelectLabel>
-                {amountOptions
-                  .filter((o) => o.currency === "USD")
-                  .map((option) => (
-                    <SelectItem key={option.label} value={option.label}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
+                {currencyOptions.map((option) => (
+                  <SelectItem key={option.currency} value={option.currency}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
